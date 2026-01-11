@@ -1,0 +1,83 @@
+.game-controls {
+  background: #222;
+  padding: 1.5rem;
+  border-radius: 8px;
+  border: 1px solid #444;
+}
+
+.game-controls h3 {
+  margin-bottom: 1rem;
+  color: #f00000;
+  font-size: 1.2rem;
+}
+
+.controls-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.control-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem;
+  background: #1a1a1a;
+  border-radius: 4px;
+}
+
+.control-key {
+  background: #333;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-family: monospace;
+  font-weight: bold;
+  min-width: 60px;
+  text-align: center;
+}
+
+.control-desc {
+  color: #aaa;
+  font-size: 0.9rem;
+}
+
+.host-controls {
+  padding-top: 1rem;
+  border-top: 1px solid #444;
+}
+
+.control-button {
+  width: 100%;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.start-button {
+  background: #00f000;
+  color: #000;
+}
+
+.start-button:hover {
+  background: #00d000;
+}
+
+.restart-button {
+  background: #f0a000;
+  color: #000;
+}
+
+.restart-button:hover:not(:disabled) {
+  background: #d08000;
+}
+
+.restart-button:disabled {
+  background: #666;
+  color: #999;
+  cursor: not-allowed;
+}

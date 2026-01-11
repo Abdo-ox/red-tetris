@@ -1,0 +1,132 @@
+import Game from '../Game.js';
+import Player from '../Player.js';
+
+describe('Game', () => {
+  let game;
+  let players;
+
+  beforeEach(() => {
+    players = new Map();
+    game = new Game('room1', players);
+  });
+
+  test('should create a game', () => {
+    expect(game.room).toBe('room1');
+    expect(game.isActive).toBe(false);
+    expect(game.isStarted).toBe(false);
+  });
+
+  test('should start game with players', () => {
+    const player1 = new Player('socket1', 'Player1', true);
+    players.set('socket1', player1);
+    
+    const result = game.start();
+    expect(result.success).toBe(true);
+    expect(game.isStarted).toBe(true);
+    expect(game.isActive).toBe(true);
+  });
+
+  test('should not start game without players', () => {
+    const result = game.start();
+    expect(result.success).toBe(false);
+    expect(result.message).toBe('Need at least one player');
+  });
+
+  test('should not start game twice', () => {
+    const player1 = new Player('socket1', 'Player1', true);
+    players.set('socket1', player1);
+    
+    game.start();
+    const result = game.start();
+    expect(result.success).toBe(false);
+    expect(result.message).toBe('Game already started');
+  });
+
+  test('should restart game', () => {
+    const player1 = new Player('socket1', 'Player1', true);
+    players.set('socket1', player1);
+    
+    game.start();
+    const result = game.restart();
+    expect(result.success).toBe(true);
+    expect(game.isStarted).toBe(true);
+    expect(game.isActive).toBe(true);
+  });
+
+  test('should handle move-left action', () => {
+    const player1 = new Player('socket1', 'Player1', true);
+    players.set('socket1', player1);
+    game.start();
+    
+    const result = game.handleAction('socket1', 'move-left');
+    expect(result.success).toBe(true);
+    expect(player1.currentPiece.x).toBe(2); // Moved left from spawn (3, 0)
+  });
+
+  test('should handle move-right action', () => {
+    const player1 = new Player('socket1', 'Player1', true);
+    players.set('socket1', player1);
+    game.start();
+    
+    const result = game.handleAction('socket1', 'move-right');
+    expect(result.success).toBe(true);
+    expect(player1.currentPiece.x).toBe(4); // Moved right from spawn (3, 0)
+  });
+
+  test('should handle rotate action', () => {
+    const player1 = new Player('socket1', 'Player1', true);
+    players.set('socket1', player1);
+    game.start();
+    
+    const originalRotation = player1.currentPiece.rotation;
+    const result = game.handleAction('socket1', 'rotate');
+    expect(result.success).toBe(true);
+    // Rotation may or may not succeed depending on piece and position
+  });
+
+  test('should not handle action for invalid player', () => {
+    const result = game.handleAction('invalid-socket', 'move-left');
+    expect(result.success).toBe(false);
+    expect(result.message).toBe('Player not found');
+  });
+
+  test('should clear lines correctly', () => {
+    const player1 = new Player('socket1', 'Player1', true);
+    players.set('socket1', player1);
+    game.start();
+    
+    // Fill a row completely
+    for (let x = 0; x < 10; x++) {
+      player1.board[19][x] = 1;
+    }
+    
+    const linesCleared = game.clearLines(player1);
+    expect(linesCleared).toBe(1);
+    expect(player1.board[19].every(cell => cell === 0)).toBe(true);
+  });
+
+  test('should check valid position', () => {
+    const player1 = new Player('socket1', 'Player1', true);
+    players.set('socket1', player1);
+    game.start();
+    
+    const piece = player1.currentPiece;
+    expect(game.isValidPosition(player1, piece)).toBe(true);
+    
+    // Move piece out of bounds
+    piece.x = -1;
+    expect(game.isValidPosition(player1, piece)).toBe(false);
+  });
+
+  test('should get game state', () => {
+    const player1 = new Player('socket1', 'Player1', true);
+    players.set('socket1', player1);
+    game.start();
+    
+    const state = game.getState();
+    expect(state.room).toBe('room1');
+    expect(state.isActive).toBe(true);
+    expect(state.isStarted).toBe(true);
+    expect(state.players.length).toBe(1);
+  });
+});

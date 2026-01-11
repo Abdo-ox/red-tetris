@@ -16,15 +16,10 @@ function HomePage() {
   useEffect(() => {
     return () => {
       // Cleanup socket on unmount (when navigating away)
-      // Give GamePage time to connect before closing this socket
       if (socketRef.current) {
-        const socket = socketRef.current;
-        // Small delay to allow GamePage to connect first
-        setTimeout(() => {
-          if (socket && socket.connected) {
-            socket.close();
-          }
-        }, 500);
+        if (socketRef.current.connected) {
+          socketRef.current.close();
+        }
         socketRef.current = null;
       }
     };
@@ -72,11 +67,16 @@ function HomePage() {
     tempSocket.on('room-joined', () => {
       clearTimeout(timeout);
       setLoading(false);
-      // Navigate immediately on success
-      // The socket will stay connected briefly and be cleaned up when component unmounts
-      // GamePage will create its own socket connection and join again
-      navigate(`/${encodeURIComponent(room.trim())}/${encodeURIComponent(name.trim())}`);
-      // Note: Don't call cleanup() here - let it happen on unmount after navigation
+      // Close the socket immediately after successful validation
+      // This removes the player from the room so GamePage can join cleanly
+      if (tempSocket && tempSocket.connected) {
+        tempSocket.close();
+      }
+      socketRef.current = null;
+      // Small delay to ensure disconnect is processed, then navigate
+      setTimeout(() => {
+        navigate(`/${encodeURIComponent(room.trim())}/${encodeURIComponent(name.trim())}`);
+      }, 100);
     });
     
     tempSocket.on('error', (data) => {

@@ -345,9 +345,13 @@ Game.prototype = {
     const newBoard = [];
     
     for (let row = 19; row >= 0; row--) {
+      const isPenaltyLine = player.board[row].every((cell) => cell === '#666666');
       const isFull = player.board[row].every((cell) => cell !== 0);
       
-      if (!isFull) {
+      // Don't clear penalty lines - they are permanent barriers
+      if (isPenaltyLine) {
+        newBoard.unshift([...player.board[row]]);
+      } else if (!isFull) {
         newBoard.unshift([...player.board[row]]);
       } else {
         linesCleared++;
@@ -376,10 +380,8 @@ Game.prototype = {
           for (let i = 0; i < penaltyLines; i++) {
             // Shift board up
             player.board.shift();
-            // Add garbage line at bottom (with one random hole)
+            // Add full penalty line at bottom (no holes - permanent barrier)
             const garbageLine = new Array(10).fill('#666666');
-            const holePosition = Math.floor(Math.random() * 10);
-            garbageLine[holePosition] = 0;
             player.board.push(garbageLine);
             
             // Check for game over

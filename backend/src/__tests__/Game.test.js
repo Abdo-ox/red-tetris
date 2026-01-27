@@ -1,5 +1,6 @@
 import Game from '../Game.js';
 import Player from '../Player.js';
+import Piece from '../Piece.js';
 
 describe('Game', () => {
   let game;
@@ -62,7 +63,7 @@ describe('Game', () => {
     expect(result.success).toBe(true);
     expect(player1.currentPiece.x).toBe(2); // Moved left from spawn (3, 0)
   });
-Piece
+
   test('should handle move-right action', () => {
     const player1 = new Player('socket1', 'Player1', true);
     players.set('socket1', player1);
@@ -173,10 +174,65 @@ Piece
 
   test('test the generate more peaces functions', () => {
     const player1 = new Player('socket1', 'Player1', true);
-    player1.currentPiece =  new Piece(Piece.getTypes()['I'], 3, 0)
+    player1.currentPiece =  new Piece(Piece.getTypes()[0], 0, 20)
     players.set('socket1', player1);
     game.restart()
-    game.rotatePiece(player1, true) 
+    game.rotatePiece(player1, true)
+  });
+
+  test('test hard drop functions line', () => {
+    const player1 = new Player('socket1', 'Player1', true);
+    player1.currentPiece =  new Piece(Piece.getTypes()[0], 0, 0)
+    players.set('socket1', player1);
+    game.hardDrop(player1)
+  });
+
+  test('test hard drop to invalid peaces', () => {
+    const player1 = new Player('socket1', 'Player1', true);
+    player1.currentPiece =  new Piece(Piece.getTypes()[0], 0, 20)
+    players.set('socket1', player1);
+    game.hardDrop(player1)
+  });
+  
+  test('test can hold peace', () => {
+    const player1 = new Player('socket1', 'Player1', true);
+    player1.currentPiece =  new Piece(Piece.getTypes()[0], 0, 20)
+    players.set('socket1', player1);
+    game.holdPiece(player1)
+  });
+
+  test('test held a peace', () => {
+    const player1 = new Player('socket1', 'Player1', true);
+    player1.currentPiece =  new Piece(Piece.getTypes()[0], 0, 20)
+    players.set('socket1', player1);
+    player1.heldPiece = new Piece(Piece.getTypes()[0], 0, -1)
+    game.holdPiece(player1)
+  });
+
+  test('test held a peace', () => {
+    const player1 = new Player('socket1', 'Player1', true);
+    player1.currentPiece =  new Piece(Piece.getTypes()[0], 0, -10)
+    players.set('socket1', player1);
+    game.lockPiece(player1)
+  });
+
+  test('test held a peace', () => {
+    const player1 = new Player('socket1', 'Player1', true);
+    player1.currentPiece =  new Piece(Piece.getTypes()[0], 0, -10)
+    players.set('socket1', player1);
+    const player2 = new Player('socket1', 'Player2', true)
+    player2.gameOver = false
+    player2.currentPiece =  new Piece(Piece.getTypes()[0], 5, 5)
+    players.set('socket1', player2);
+    game.lockPiece(player1)
+  });
+
+  test("test can't hold peace", () => {
+    const player1 = new Player('socket1', 'Player1', true);
+    player1.currentPiece =  new Piece(Piece.getTypes()[0], 0, 20)
+    players.set('socket1', player1);
+    player1.canHold = false
+    game.holdPiece(player1)
   });
 
 });

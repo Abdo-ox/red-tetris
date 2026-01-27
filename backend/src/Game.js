@@ -411,6 +411,7 @@ Game.prototype = {
     let winner = null;
     
     this.players.forEach((player) => {
+      console.log("player gmae over:", player.gameOver)
       if (player.gameOver) {
         gameOverPlayers++;
       } else {

@@ -103,4 +103,8 @@ describe('GameManager', () => {
     const state = manager.getRoomState('nonexistent');
     expect(state).toBeNull();
   });
+
+  test('join invalid room or player', () => {
+    const state = manager.joinRoom(null, null)
+  });
 });

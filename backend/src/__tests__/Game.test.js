@@ -131,8 +131,7 @@ describe('Game', () => {
     expect(state.players.length).toBe(1);
   });
 
-  test('test the generate more peaces functions', () => {
-    console.log("sequence length: ", game.pieceSequence.length)
+  test('test the generate more peaces if more peace is needed', () => {
     const player1 = new Player('socket1', 'Player1', true);
     for (let i = 0 ;i < 1; i++){
       game.getNextPiece(player1)
@@ -144,7 +143,7 @@ describe('Game', () => {
     expect(game.pieceSequence.length).toBe(50);
   });
 
-  test('test the generate more peaces functions', () => {
+  test('test actions on the pieces', () => {
     const player1 = new Player('socket1', 'Player1', true);
     players.set('socket1', player1);
     game.isActive = false
@@ -157,22 +156,21 @@ describe('Game', () => {
     game. handleAction('socket1', '')
   });
 
-  test('test the generate more peaces functions', () => {
+  test('test move piece action', () => {
     const player1 = new Player('socket1', 'Player1', true);
     players.set('socket1', player1);
     game.restart()
-    console.log("147 line");
     game.movePiece(player1, -100, 1) 
   });
 
-  test('test the generate more peaces functions', () => {
+  test('test invalid move', () => {
     const player1 = new Player('socket1', 'Player1', true);
     players.set('socket1', player1);
     game.restart()
     game.movePiece(player1, -100, -100) 
   });
 
-  test('test the generate more peaces functions', () => {
+  test('test rotation of a piece in counterClockwise', () => {
     const player1 = new Player('socket1', 'Player1', true);
     player1.currentPiece =  new Piece(Piece.getTypes()[0], 0, 20)
     players.set('socket1', player1);
@@ -201,7 +199,15 @@ describe('Game', () => {
     game.holdPiece(player1)
   });
 
-  test('test held a peace', () => {
+  test("test hold peace a peace that can't be holded", () => {
+    const player1 = new Player('socket1', 'Player1', true);
+    player1.currentPiece =  new Piece(Piece.getTypes()[0], 0, 20)
+    players.set('socket1', player1);
+    player1.canHold = false
+    game.holdPiece(player1)
+  });
+
+  test('test already holded piece', () => {
     const player1 = new Player('socket1', 'Player1', true);
     player1.currentPiece =  new Piece(Piece.getTypes()[0], 0, 20)
     players.set('socket1', player1);
@@ -209,14 +215,14 @@ describe('Game', () => {
     game.holdPiece(player1)
   });
 
-  test('test held a peace', () => {
+  test('test lock piece without winner', () => {
     const player1 = new Player('socket1', 'Player1', true);
     player1.currentPiece =  new Piece(Piece.getTypes()[0], 0, -10)
     players.set('socket1', player1);
     game.lockPiece(player1)
   });
 
-  test('test held a peace', () => {
+  test('test lockpiece with a winner', () => {
     const player1 = new Player('socket1', 'Player1', true);
     player1.currentPiece =  new Piece(Piece.getTypes()[0], 0, -10)
     players.set('socket1', player1);
@@ -226,14 +232,5 @@ describe('Game', () => {
     players.set('socket1', player2);
     game.lockPiece(player1)
   });
-
-  test("test can't hold peace", () => {
-    const player1 = new Player('socket1', 'Player1', true);
-    player1.currentPiece =  new Piece(Piece.getTypes()[0], 0, 20)
-    players.set('socket1', player1);
-    player1.canHold = false
-    game.holdPiece(player1)
-  });
-
 });
 

@@ -24,7 +24,6 @@ GameManager.prototype = {
     if (game && game.isStarted) {
       return { success: false, message: 'Game has already started' };
     }
-    
     // Check maximum players (4)
     if (game && game.players.size >= 4) {
       return { success: false, message: 'Room is full (maximum 4 players)' };

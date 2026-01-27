@@ -81,9 +81,7 @@ Game.prototype = {
    */
   getNextPiece(player) {
     // Ensure sequence is long enough
-    console.log("enter----------------------------------->#", this.pieceSequence.length, player.pieceIndex + 2)
     if (this.pieceSequence.length <= player.pieceIndex + 2) {
-      console.log("enter----------------------------------->")
       this.generateMorePieces(50);
     }
     
@@ -411,7 +409,6 @@ Game.prototype = {
     let winner = null;
     
     this.players.forEach((player) => {
-      console.log("player gmae over:", player.gameOver)
       if (player.gameOver) {
         gameOverPlayers++;
       } else {

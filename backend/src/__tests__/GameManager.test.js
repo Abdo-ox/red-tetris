@@ -12,6 +12,10 @@ describe('GameManager', () => {
     expect(manager.players).toBeDefined();
   });
 
+  test('start game with invalid room-id', () => {
+    manager.startGame('', '')
+  });
+
   test('should join room successfully', () => {
     const result = manager.joinRoom('socket1', 'room1', 'Player1');
     expect(result.success).toBe(true);

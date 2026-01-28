@@ -41,10 +41,10 @@ Game.prototype = {
       // pieceIndex starts at 1 because they already have piece 0
       player.pieceIndex = 1;
       
-      // Ensure sequence is long enough
-      if (this.pieceSequence.length <= 1) {
-        this.generateMorePieces(50);
-      }
+      // // Ensure sequence is long enough
+      // if (this.pieceSequence.length <= 1) {
+      //   this.generateMorePieces(50);
+      // }
       // All players get the same next piece (index 1)
       player.nextPiece = new Piece(this.pieceSequence[1], 3, 0);
     });
@@ -95,7 +95,7 @@ Game.prototype = {
   /**
    * Handle a game action from a player
    */
-  handleAction(socketId, action, data) {
+  handleAction(socketId, action) {
     const player = this.players.get(socketId);
     if (!player) {
       return { success: false, message: 'Player not found' };

@@ -1,9 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { io } from 'socket.io-client';
 import '../styles/HomePage.css';
-
-const SERVER_URL = window.location.origin;
+import { createTempSocket } from '../middleware/socketMiddleware';
 
 function HomePage() {
   const [roomId, setRoomId] = useState('');
@@ -41,9 +39,7 @@ function HomePage() {
     setLoading(true);
     
     // Create temporary socket connection to validate join
-    const tempSocket = io(SERVER_URL, {
-      autoConnect: true
-    });
+    const tempSocket = createTempSocket();
     
     socketRef.current = tempSocket;
     
@@ -147,14 +143,7 @@ function HomePage() {
               className="btn btn-create"
               disabled={loading}
             >
-              {loading ? 'Connecting...' : 'Create Room'}
-            </button>
-            <button 
-              onClick={handleJoinRoom}
-              className="btn btn-join"
-              disabled={loading}
-            >
-              {loading ? 'Connecting...' : 'Join Room'}
+              {loading ? 'Connecting...' : 'Create Room or Join Room'}
             </button>
           </div>
           

@@ -1,13 +1,11 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { io } from 'socket.io-client';
 import GameBoard from '../components/GameBoard';
 import PlayerList from '../components/PlayerList';
 import SpectrumView from '../components/SpectrumView';
 import GameControls from '../components/GameControls';
 import '../styles/GamePage.css';
-
-const SERVER_URL = window.location.origin;
+import { createSocket } from '../middleware/socketMiddleware';
 
 function GamePage() {
   const { room, playerName } = useParams();
@@ -32,7 +30,7 @@ function GamePage() {
   const [showGameOverModal, setShowGameOverModal] = useState(true);
 
   useEffect(() => {
-    const newSocket = io(SERVER_URL);
+    const newSocket = createSocket();
     setSocket(newSocket);
 
     newSocket.on('connect', () => {

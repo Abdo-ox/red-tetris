@@ -12,6 +12,45 @@ function GameManager() {
 
 GameManager.prototype = {
   /**
+   * Create a new room
+   */
+  createRoom(socketId, room, playerName) {
+    if (!room || !playerName) {
+      return { success: false, message: 'Room and player name required' };
+    }
+    
+    // Normalize room ID (trim whitespace)
+    const normalizedRoom = room.trim();
+    
+    // Check if room already exists
+    const existingGame = this.rooms.get(normalizedRoom);
+    if (existingGame) {
+      return { success: false, message: 'Room ID already taken' };
+    }
+    
+    // Create new room
+    const game = new Game(normalizedRoom, new Map());
+    this.rooms.set(normalizedRoom, game);
+    
+    // Create player as host
+    const player = new Player(socketId, playerName, true);
+    game.players.set(socketId, player);
+    
+    // Store player mapping
+    this.players.set(socketId, { room: normalizedRoom, playerName });
+    
+    const playersList = Array.from(game.players.values()).map((p) => p.toJSON());
+    
+    return {
+      success: true,
+      room: normalizedRoom,
+      playerName,
+      isHost: true,
+      players: playersList
+    };
+  },
+
+  /**
    * Join a room
    */
   joinRoom(socketId, room, playerName) {
